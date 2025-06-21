@@ -14,24 +14,60 @@ fetch(url)
     document.getElementById('description').textContent = 'Impossible de récupérer la météo.';
   });
 
-function allumerPrise() {
-  // Remplace l'URL par celle de ton webhook IFTTT "on"
-  fetch('https://maker.ifttt.com/trigger/allumer_prise/with/key/VOTRE_CLE_IFTTT')
-    .then(() => {
-      document.getElementById('etat-prise').textContent = 'État : Allumée';
-    })
-    .catch(() => {
-      document.getElementById('etat-prise').textContent = 'Erreur lors de l’activation.';
-    });
-}
+// Assure-toi de remplacer 'TON_API_KEY_OPENAI' par ta vraie clé OpenAI
+const openaiApiKey = 'TON_API_KEY_OPENAI';
 
-function eteindrePrise() {
-  // Remplace l'URL par celle de ton webhook IFTTT "off"
-  fetch('https://maker.ifttt.com/trigger/eteindre_prise/with/key/VOTRE_CLE_IFTTT')
-    .then(() => {
-      document.getElementById('etat-prise').textContent = 'État : Éteinte';
-    })
-    .catch(() => {
-      document.getElementById('etat-prise').textContent = 'Erreur lors de la désactivation.';
+// Initialisation reconnaissance vocale
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+const recognition = new SpeechRecognition();
+recognition.lang = 'fr-FR';
+recognition.interimResults = false;
+
+const btnParler = document.getElementById('btnParler');
+const divReponses = document.getElementById('reponses');
+
+btnParler.onclick = () => {
+  divReponses.innerHTML += `<p><em>Écoute...</em></p>`;
+  recognition.start();
+};
+
+recognition.onresult = async (event) => {
+  const texte = event.results[0][0].transcript;
+  divReponses.innerHTML += `<p><strong>Vous :</strong> ${texte}</p>`;
+
+  // Appel à OpenAI
+  const reponse = await appelerChatGPT(texte);
+  
+  divReponses.innerHTML += `<p><strong>ChatGPT :</strong> ${reponse}</p>`;
+  divReponses.scrollTop = divReponses.scrollHeight;
+
+  // Synthèse vocale
+  const utterance = new SpeechSynthesisUtterance(reponse);
+  utterance.lang = 'fr-FR';
+  speechSynthesis.speak(utterance);
+};
+
+recognition.onerror = (event) => {
+  divReponses.innerHTML += `<p><em>Erreur reconnaissance vocale : ${event.error}</em></p>`;
+};
+
+async function appelerChatGPT(question) {
+  try {
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${openaiApiKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        model: 'gpt-4o-mini',
+        messages: [{ role: 'user', content: question }]
+      })
     });
+    const data = await response.json();
+    return data.choices[0].message.content.trim();
+  } catch (error) {
+    console.error('Erreur API OpenAI:', error);
+    return "Désolé, une erreur est survenue.";
+  }
 }
