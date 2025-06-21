@@ -1,4 +1,4 @@
-const API_KEY = '5c6623a73ef8a00b332500654eced9db'; // ✅ Ta clé API
+const API_KEY = '11bbb6ce48a41c696c72557cc6dbd26f'; // ✅ Ta clé API
 
 const ville = 'Henin-Beaumont,FR';
 const url = `https://api.openweathermap.org/data/2.5/weather?q=${ville}&units=metric&lang=fr&appid=${API_KEY}`;
