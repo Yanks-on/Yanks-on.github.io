@@ -1,55 +1,81 @@
-// === Météo ===
-const API_KEY = '11bbb6ce48a41c696c72557cc6dbd26f'; // Ta clé API OpenWeatherMap
+// Météo
+const API_KEY = '11bbb6ce48a41c696c72557cc6dbd26f'; // Ta clé OpenWeatherMap
 const ville = 'Henin-Beaumont,FR';
 const url = `https://api.openweathermap.org/data/2.5/weather?q=${ville}&units=metric&lang=fr&appid=${API_KEY}`;
 
-fetch(url)
-  .then(response => response.json())
-  .then(data => {
-    document.getElementById('temperature').textContent = `Température : ${data.main.temp} °C`;
-    document.getElementById('description').textContent = `Conditions : ${data.weather[0].description}`;
-  })
-  .catch(() => {
-    document.getElementById('description').textContent = 'Impossible de récupérer la météo.';
-  });
+// Créer la carte météo
+function createMeteoCard(data) {
+  const card = document.createElement('section');
+  card.className = 'card';
+  card.id = 'meteo';
 
-// === Chat vocal ChatGPT ===
-const openaiApiKey = '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'; // Remplace par ta clé API OpenAI
+  card.innerHTML = `
+    <h2>Météo</h2>
+    <p>Ville : ${ville.split(',')[0]}</p>
+    <p>Température : ${data.main.temp} °C</p>
+    <p>Conditions : ${data.weather[0].description}</p>
+  `;
+  return card;
+}
+
+// Affiche erreur météo
+function createMeteoError() {
+  const card = document.createElement('section');
+  card.className = 'card';
+  card.id = 'meteo';
+  card.innerHTML = `
+    <h2>Météo</h2>
+    <p>Impossible de récupérer la météo.</p>
+  `;
+  return card;
+}
+
+// ChatGPT vocal
+const openaiApiKey = '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'; // Remplace par ta clé OpenAI valide
 
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-if (!SpeechRecognition) {
-  alert('La reconnaissance vocale n’est pas supportée par ton navigateur.');
+const recognition = SpeechRecognition ? new SpeechRecognition() : null;
+if (!recognition) {
+  alert('Reconnaissance vocale non supportée par votre navigateur');
 }
-const recognition = new SpeechRecognition();
+
 recognition.lang = 'fr-FR';
 recognition.interimResults = false;
 
 const btnParler = document.getElementById('btnParler');
-const divReponses = document.getElementById('reponses');
+const chatBox = document.getElementById('chatReponses');
 
-btnParler.onclick = () => {
-  divReponses.innerHTML += `<p><em>Écoute...</em></p>`;
+btnParler.addEventListener('click', () => {
+  if (chatBox.style.display === 'flex') {
+    chatBox.style.display = 'none';
+  } else {
+    chatBox.style.display = 'flex';
+    startRecognition();
+  }
+});
+
+function startRecognition() {
+  if (!recognition) return;
+  chatBox.innerHTML += `<p class="user"><em>Écoute...</em></p>`;
   recognition.start();
-};
+}
 
 recognition.onresult = async (event) => {
   const texte = event.results[0][0].transcript;
-  divReponses.innerHTML += `<p><strong>Vous :</strong> ${texte}</p>`;
+  chatBox.innerHTML += `<p class="user"><strong>Vous :</strong> ${texte}</p>`;
 
-  // Appel à OpenAI
   const reponse = await appelerChatGPT(texte);
-  
-  divReponses.innerHTML += `<p><strong>ChatGPT :</strong> ${reponse}</p>`;
-  divReponses.scrollTop = divReponses.scrollHeight;
+  chatBox.innerHTML += `<p class="gpt"><strong>ChatGPT :</strong> ${reponse}</p>`;
 
-  // Synthèse vocale
+  chatBox.scrollTop = chatBox.scrollHeight;
+
   const utterance = new SpeechSynthesisUtterance(reponse);
   utterance.lang = 'fr-FR';
   speechSynthesis.speak(utterance);
 };
 
 recognition.onerror = (event) => {
-  divReponses.innerHTML += `<p><em>Erreur reconnaissance vocale : ${event.error}</em></p>`;
+  chatBox.innerHTML += `<p><em>Erreur reconnaissance vocale : ${event.error}</em></p>`;
 };
 
 async function appelerChatGPT(question) {
@@ -72,3 +98,17 @@ async function appelerChatGPT(question) {
     return "Désolé, une erreur est survenue.";
   }
 }
+
+// Init
+window.onload = () => {
+  fetch(url)
+    .then(res => res.json())
+    .then(data => {
+      const meteoCard = createMeteoCard(data);
+      document.getElementById('dashboard').appendChild(meteoCard);
+    })
+    .catch(() => {
+      const meteoErrorCard = createMeteoError();
+      document.getElementById('dashboard').appendChild(meteoErrorCard);
+    });
+};
