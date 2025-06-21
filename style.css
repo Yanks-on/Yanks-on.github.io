@@ -1,0 +1,111 @@
+/* Reset & basics */
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f0f2f5;
+  color: #222;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 1rem;
+}
+header {
+  background-color: #2563eb;
+  color: white;
+  padding: 1.5rem 1rem;
+  font-size: 1.8rem;
+  font-weight: 700;
+  text-align: center;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgb(37 99 235 / 0.3);
+  user-select: none;
+}
+
+main {
+  flex-grow: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+/* Carte météo & chat */
+.card {
+  background: white;
+  border-radius: 14px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+  padding: 1.2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-height: 300px;
+}
+
+h2 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: #2563eb;
+  font-weight: 600;
+  user-select: none;
+}
+
+/* Météo */
+#meteo p {
+  font-size: 1.1rem;
+  margin: 0.5rem 0;
+}
+
+/* Chat vocal */
+#chatgpt {
+  display: flex;
+  flex-direction: column;
+}
+
+#btnParler {
+  padding: 15px;
+  font-size: 1.2rem;
+  border: none;
+  background-color: #2563eb;
+  color: white;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  user-select: none;
+}
+#btnParler:hover {
+  background-color: #1d4ed8;
+}
+
+#reponses {
+  margin-top: 1rem;
+  flex-grow: 1;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  padding: 1rem;
+  border-radius: 10px;
+  background: #f9fafb;
+  font-size: 1rem;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  user-select: text;
+}
+
+#reponses p {
+  margin: 0.4rem 0;
+}
+#reponses p strong {
+  color: #1e40af;
+}
+
+/* Responsive tablette & mobile */
+@media (max-width: 768px) {
+  main {
+    grid-template-columns: 1fr;
+  }
+  .card {
+    min-height: auto;
+  }
+}
