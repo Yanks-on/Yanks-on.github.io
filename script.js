@@ -13,3 +13,25 @@ fetch(url)
     console.error('Erreur météo :', error);
     document.getElementById('description').textContent = 'Impossible de récupérer la météo.';
   });
+
+function allumerPrise() {
+  // Remplace l'URL par celle de ton webhook IFTTT "on"
+  fetch('https://maker.ifttt.com/trigger/allumer_prise/with/key/VOTRE_CLE_IFTTT')
+    .then(() => {
+      document.getElementById('etat-prise').textContent = 'État : Allumée';
+    })
+    .catch(() => {
+      document.getElementById('etat-prise').textContent = 'Erreur lors de l’activation.';
+    });
+}
+
+function eteindrePrise() {
+  // Remplace l'URL par celle de ton webhook IFTTT "off"
+  fetch('https://maker.ifttt.com/trigger/eteindre_prise/with/key/VOTRE_CLE_IFTTT')
+    .then(() => {
+      document.getElementById('etat-prise').textContent = 'État : Éteinte';
+    })
+    .catch(() => {
+      document.getElementById('etat-prise').textContent = 'Erreur lors de la désactivation.';
+    });
+}
