@@ -15,7 +15,7 @@ fetch(url)
   });
 
 // Assure-toi de remplacer 'TON_API_KEY_OPENAI' par ta vraie clé OpenAI
-const openaiApiKey = 'TON_API_KEY_OPENAI';
+const openaiApiKey = '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';
 
 // Initialisation reconnaissance vocale
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
