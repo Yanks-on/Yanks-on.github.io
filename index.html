@@ -2,27 +2,20 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Dashboard Domotique - Tablette</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard Domotique - Style Pinterest</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header>Dashboard Domotique - Hénin-Beaumont</header>
 
-  <main>
-    <section class="card" id="meteo">
-      <h2>Météo</h2>
-      <p id="ville">Ville : Hénin-Beaumont</p>
-      <p id="temperature">Température : -- °C</p>
-      <p id="description">Conditions : --</p>
-    </section>
-
-    <section class="card" id="chatgpt">
-      <h2>Chat Vocal ChatGPT</h2>
-      <button id="btnParler">Parler à ChatGPT</button>
-      <div id="reponses"></div>
-    </section>
+  <main id="dashboard">
+    <!-- Les cartes vont ici -->
   </main>
+
+  <button id="btnParler" title="Parler à ChatGPT">🎤</button>
+
+  <div id="chatReponses" class="chat-box"></div>
 
   <script src="script.js"></script>
 </body>
