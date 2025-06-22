@@ -112,3 +112,18 @@ window.onload = () => {
       document.getElementById('dashboard').appendChild(meteoErrorCard);
     });
 };
+
+function parlerAvecVoix(message) {
+  if ('speechSynthesis' in window) {
+    const synth = window.speechSynthesis;
+    const utterance = new SpeechSynthesisUtterance(message);
+    utterance.lang = 'fr-FR';
+    utterance.onerror = function (e) {
+      console.error("Erreur de synthèse vocale :", e.error);
+    };
+    synth.speak(utterance);
+  } else {
+    console.error("Synthèse vocale non supportée par ce navigateur.");
+  }
+}
+
