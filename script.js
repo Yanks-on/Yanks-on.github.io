@@ -31,86 +31,45 @@ function createMeteoError() {
 }
 
 // ChatGPT vocal
-const openaiApiKey = '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'; // Remplace par ta clé OpenAI valide
+const API_KEY = "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"; // ← remplace ici
 
-const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-const recognition = SpeechRecognition ? new SpeechRecognition() : null;
-if (!recognition) {
-  alert('Reconnaissance vocale non supportée par votre navigateur');
-}
-
+const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
 recognition.lang = 'fr-FR';
-recognition.interimResults = false;
 
-const btnParler = document.getElementById('btnParler');
-const chatBox = document.getElementById('chatReponses');
-
-btnParler.addEventListener('click', () => {
-  if (chatBox.style.display === 'flex') {
-    chatBox.style.display = 'none';
-  } else {
-    chatBox.style.display = 'flex';
-    startRecognition();
-  }
+document.getElementById("start-voice").addEventListener("click", () => {
+  document.getElementById("reponse").textContent = "Écoute...";
+  recognition.start();
 });
 
-function startRecognition() {
-  if (!recognition) return;
-  chatBox.innerHTML += `<p class="user"><em>Écoute...</em></p>`;
-  recognition.start();
-}
-
-recognition.onresult = async (event) => {
+recognition.onresult = (event) => {
   const texte = event.results[0][0].transcript;
-  chatBox.innerHTML += `<p class="user"><strong>Vous :</strong> ${texte}</p>`;
+  console.log("Tu as dit :", texte);
 
-  const reponse = await appelerChatGPT(texte);
-  chatBox.innerHTML += `<p class="gpt"><strong>ChatGPT :</strong> ${reponse}</p>`;
-
-  chatBox.scrollTop = chatBox.scrollHeight;
-
-  const utterance = new SpeechSynthesisUtterance(reponse);
-  utterance.lang = 'fr-FR';
-  speechSynthesis.speak(utterance);
-};
-
-recognition.onerror = (event) => {
-  chatBox.innerHTML += `<p><em>Erreur reconnaissance vocale : ${event.error}</em></p>`;
-};
-
-async function appelerChatGPT(question) {
-  try {
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${openaiApiKey}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        messages: [{ role: 'user', content: question }]
-      })
-    });
-    const data = await response.json();
-    return data.choices[0].message.content.trim();
-  } catch (error) {
-    console.error('Erreur API OpenAI:', error);
-    return "Désolé, une erreur est survenue.";
-  }
-}
-
-// Init
-window.onload = () => {
-  fetch(url)
-    .then(res => res.json())
-    .then(data => {
-      const meteoCard = createMeteoCard(data);
-      document.getElementById('dashboard').appendChild(meteoCard);
+  fetch("https://api.openai.com/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${API_KEY}`
+    },
+    body: JSON.stringify({
+      model: "gpt-3.5-turbo",
+      messages: [{ role: "user", content: texte }]
     })
-    .catch(() => {
-      const meteoErrorCard = createMeteoError();
-      document.getElementById('dashboard').appendChild(meteoErrorCard);
-    });
+  })
+  .then(res => {
+    if (!res.ok) throw new Error("Réponse non OK");
+    return res.json();
+  })
+  .then(data => {
+    const reponse = data.choices[0].message.content;
+    document.getElementById("reponse").textContent = reponse;
+    parlerAvecVoix(reponse);
+  })
+  .catch(error => {
+    console.error("Erreur API :", error);
+    document.getElementById("reponse").textContent = "Erreur lors de l'appel à ChatGPT.";
+    parlerAvecVoix("Désolé, une erreur est survenue.");
+  });
 };
 
 function parlerAvecVoix(message) {
@@ -119,11 +78,10 @@ function parlerAvecVoix(message) {
     const utterance = new SpeechSynthesisUtterance(message);
     utterance.lang = 'fr-FR';
     utterance.onerror = function (e) {
-      console.error("Erreur de synthèse vocale :", e.error);
+      console.error("Erreur synthèse vocale :", e.error);
     };
     synth.speak(utterance);
   } else {
-    console.error("Synthèse vocale non supportée par ce navigateur.");
+    alert("La synthèse vocale n’est pas supportée.");
   }
 }
-
