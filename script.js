@@ -84,7 +84,7 @@ function createMeteoError() {
 }
 
 // ChatGPT vocal
-const openaiApiKey = 'TA_CLE_API_OPENAI_ICI'; // Remplace par ta clé OpenAI valide
+const openaiApiKey = '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'; // Remplace par ta clé OpenAI valide
 
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 const recognition = SpeechRecognition ? new SpeechRecognition() : null;
