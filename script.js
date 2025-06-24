@@ -1,33 +1,54 @@
-const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-const recognition = new SpeechRecognition();
+const API_KEY = "TA_CLE_API_OPENAI"; // ← remplace ici
+
+const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
 recognition.lang = 'fr-FR';
-recognition.interimResults = false;
 
-const btn = document.getElementById('btnParler');
-const chat = document.getElementById('chatReponses');
-
-btn.addEventListener('click', () => {
-  chat.style.display = 'block';
-  chat.innerHTML += `<p class="user"><em>Écoute...</em></p>`;
+document.getElementById("start-voice").addEventListener("click", () => {
+  document.getElementById("reponse").textContent = "Écoute...";
   recognition.start();
 });
 
-recognition.onresult = async (event) => {
+recognition.onresult = (event) => {
   const texte = event.results[0][0].transcript;
-  chat.innerHTML += `<p class="user"><strong>Vous :</strong> ${texte}</p>`;
-  const response = await fetch('/api/chat', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ question: texte })
+  console.log("Tu as dit :", texte);
+
+  fetch("https://api.openai.com/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${API_KEY}`
+    },
+    body: JSON.stringify({
+      model: "gpt-3.5-turbo",
+      messages: [{ role: "user", content: texte }]
+    })
+  })
+  .then(res => {
+    if (!res.ok) throw new Error("Réponse non OK");
+    return res.json();
+  })
+  .then(data => {
+    const reponse = data.choices[0].message.content;
+    document.getElementById("reponse").textContent = reponse;
+    parlerAvecVoix(reponse);
+  })
+  .catch(error => {
+    console.error("Erreur API :", error);
+    document.getElementById("reponse").textContent = "Erreur lors de l'appel à ChatGPT.";
+    parlerAvecVoix("Désolé, une erreur est survenue.");
   });
-  const data = await response.json();
-  const reponse = data.reponse || 'Erreur';
-  chat.innerHTML += `<p class="gpt"><strong>ChatGPT :</strong> ${reponse}</p>`;
-  const voix = new SpeechSynthesisUtterance(reponse);
-  voix.lang = 'fr-FR';
-  speechSynthesis.speak(voix);
 };
 
-recognition.onerror = (e) => {
-  chat.innerHTML += `<p><em>Erreur reconnaissance vocale : ${e.error}</em></p>`;
-};
+function parlerAvecVoix(message) {
+  if ('speechSynthesis' in window) {
+    const synth = window.speechSynthesis;
+    const utterance = new SpeechSynthesisUtterance(message);
+    utterance.lang = 'fr-FR';
+    utterance.onerror = function (e) {
+      console.error("Erreur synthèse vocale :", e.error);
+    };
+    synth.speak(utterance);
+  } else {
+    alert("La synthèse vocale n’est pas supportée.");
+  }
+}
