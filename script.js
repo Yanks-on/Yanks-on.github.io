@@ -8,7 +8,7 @@ function createMeteoCard(data) {
   card.className = 'card';
 
   card.innerHTML = `
-    <h2>Météo actuelle</h2>
+    <h2>Météo actuelle à ${ville.split(',')[0]} </h2>
     <p><strong>Ville :</strong> ${ville.split(',')[0]}</p>
     <p><strong>Température :</strong> ${data.main.temp} °C</p>
     <p><strong>Ressenti :</strong> ${data.main.feels_like} °C</p>
