@@ -1,67 +1,69 @@
+/* Reset & base */
 * {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
 }
 
-/* Body & fond */
 body {
-  font-family: 'Segoe UI', sans-serif;
-  background: #0f172a; /* Bleu nuit */
-  color: #f1f5f9;       /* Blanc-gris bleuté */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #1e293b; /* gris bleuté foncé */
+  color: #f1f5f9; /* texte clair */
   min-height: 100vh;
-  padding: 2rem;
+  display: flex;
+  flex-direction: column;
 }
 
-/* Header */
+/* En-tête */
 header {
+  background-color: #0f172a; /* bleu nuit */
+  color: #e2e8f0;
+  padding: 1.5rem;
+  font-size: 2rem;
   text-align: center;
-  margin-bottom: 2rem;
+  font-weight: bold;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
-header h1 {
-  font-size: 2.8rem;
-  color: #38bdf8; /* Bleu clair */
-}
-
-header p {
-  font-size: 1.2rem;
-  color: #94a3b8; /* Gris clair */
-}
-
-/* Dashboard grille */
+/* Dashboard style masonry */
 #dashboard {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+  padding: 1.5rem;
 }
 
-/* Cartes glassmorphism */
+/* Cartes */
 .card {
-  background: rgba(255, 255, 255, 0.06);
-  border-radius: 16px;
+  background-color: #334155; /* gris bleu foncé */
+  border-radius: 12px;
   padding: 1.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(12px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease;
 }
 
 .card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 30px rgba(56, 189, 248, 0.2);
+  transform: scale(1.02);
 }
 
 .card h2 {
-  color: #7dd3fc;
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-  border-bottom: 1px solid #1e293b;
-  padding-bottom: 0.5rem;
+  color: #38bdf8; /* bleu clair */
+  margin-bottom: 0.75rem;
+  font-size: 1.3rem;
+}
+
+/* Météo spéciale */
+.card.meteo {
+  grid-column: span 2;
+}
+
+@media (max-width: 768px) {
+  .card.meteo {
+    grid-column: span 1;
+  }
 }
 
 .card p {
+  margin: 0.5rem 0;
   font-size: 1rem;
-  margin: 0.4rem 0;
-  color: #e2e8f0;
 }
