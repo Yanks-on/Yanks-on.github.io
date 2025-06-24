@@ -2,7 +2,7 @@ const API_KEY = '11bbb6ce48a41c696c72557cc6dbd26f'; // Clé OpenWeatherMap
 const ville = 'Henin-Beaumont,FR';
 const url = `https://api.openweathermap.org/data/2.5/weather?q=${ville}&units=metric&lang=fr&appid=${API_KEY}`;
 
-// Création de la carte météo
+// Génère une carte météo
 function createMeteoCard(data) {
   const card = document.createElement('section');
   card.className = 'card';
@@ -18,16 +18,18 @@ function createMeteoCard(data) {
   return card;
 }
 
+// En cas d'erreur
 function createMeteoError() {
   const card = document.createElement('section');
   card.className = 'card';
   card.innerHTML = `
     <h2>Météo</h2>
-    <p>❌ Erreur : Impossible de récupérer la météo.</p>
+    <p>❌ Erreur : impossible de récupérer la météo.</p>
   `;
   return card;
 }
 
+// Initialisation
 window.onload = () => {
   fetch(url)
     .then(res => res.json())
