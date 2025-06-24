@@ -1,17 +1,17 @@
 /* Reset */
 * {
-  box-sizing: border-box;
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
-/* Body + base */
+/* Body & fond */
 body {
   font-family: 'Segoe UI', sans-serif;
-  background: linear-gradient(to bottom right, #1f2937, #111827);
-  color: #e5e7eb;
+  background: #0f172a; /* Bleu nuit */
+  color: #f1f5f9;       /* Blanc-gris bleuté */
   min-height: 100vh;
-  padding: 1rem;
+  padding: 2rem;
 }
 
 /* Header */
@@ -21,47 +21,48 @@ header {
 }
 
 header h1 {
-  font-size: 2.5rem;
-  color: #60a5fa;
+  font-size: 2.8rem;
+  color: #38bdf8; /* Bleu clair */
 }
 
 header p {
   font-size: 1.2rem;
-  color: #9ca3af;
+  color: #94a3b8; /* Gris clair */
 }
 
-/* Dashboard */
+/* Dashboard grille */
 #dashboard {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 1.5rem;
-  padding: 1rem;
 }
 
-/* Cartes */
+/* Cartes glassmorphism */
 .card {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(8px);
-  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
   padding: 1.5rem;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  transition: transform 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .card:hover {
-  transform: scale(1.03);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(56, 189, 248, 0.2);
 }
 
 .card h2 {
-  color: #93c5fd;
+  color: #7dd3fc;
+  font-size: 1.5rem;
   margin-bottom: 1rem;
-  font-size: 1.4rem;
-  border-bottom: 1px solid #374151;
+  border-bottom: 1px solid #1e293b;
   padding-bottom: 0.5rem;
 }
 
 .card p {
   font-size: 1rem;
   margin: 0.4rem 0;
+  color: #e2e8f0;
 }
