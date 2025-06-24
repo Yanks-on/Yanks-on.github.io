@@ -2,28 +2,20 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard Vocal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard Domotique - Style Pinterest</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <header>Dashboard Domotique - Hénin-Beaumont</header>
 
-  <header>
-    <h1>Dashboard Vocal 📢</h1>
-  </header>
-
-  <main class="grid">
-    <div class="card large">
-      <h2>Assistant Vocal</h2>
-      <p>Appuie sur le micro pour parler à ChatGPT</p>
-      <button id="start-voice">🎙 Parler</button>
-    </div>
-
-    <div class="card">
-      <h2>Réponse</h2>
-      <p id="reponse">La réponse s'affichera ici...</p>
-    </div>
+  <main id="dashboard">
+    <!-- Les cartes vont ici -->
   </main>
+
+  <button id="btnParler" title="Parler à ChatGPT">🎤</button>
+
+  <div id="chatReponses" class="chat-box"></div>
 
   <script src="script.js"></script>
 </body>
